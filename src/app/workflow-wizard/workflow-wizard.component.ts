@@ -161,10 +161,9 @@ export class WorkflowWizardComponent {
   }
 
   resetForm() {
-    this.workflowForm.reset(); // Reset the entire form
-    this.step = 0; // Set step to 1
+    this.workflowForm.reset();
+    this.step = 0;
 
-    // Reinitialize the form with empty values
     this.workflowForm = this.fb.group({
       workflow: this.fb.group({
         name: ['', [Validators.required, Validators.maxLength(255)]],
