@@ -1,0 +1,140 @@
+{
+  "1": {
+    "workflow": {
+      "name": "Comprehensive Approval Process",
+      "description": "A multi-stage workflow for approvals",
+      "sla": 72
+    },
+    "stages": [
+      {
+        "name": "Initial Review",
+        "description": "First step in the approval process",
+        "auto_progress": true,
+        "order_index": 1,
+        "sla": 20,
+        "tasks": [
+          {
+            "name": "Manager Approval",
+            "description": "Manager must approve",
+            "auto_execute": false,
+            "order_index": 1,
+            "sla": 10,
+            "user_ids": [
+              1,
+              2
+            ]
+          },
+          {
+            "name": "HR Validation",
+            "description": "HR department checks compliance",
+            "auto_execute": false,
+            "order_index": 2,
+            "sla": 10,
+            "user_ids": [
+              3
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Final Approval",
+        "description": "Final step before execution",
+        "auto_progress": true,
+        "order_index": 3,
+        "sla": 28,
+        "tasks": [
+          {
+            "name": "CEO Approval",
+            "description": "CEO must give the final sign-off",
+            "auto_execute": false,
+            "order_index": 1,
+            "sla": 16,
+            "user_ids": [
+              7
+            ]
+          },
+          {
+            "name": "Implementation Notification",
+            "description": "Notify the implementation team",
+            "auto_execute": true,
+            "order_index": 2,
+            "sla": 12,
+            "user_ids": [
+              8,
+              9
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+
+  "2": {
+    "workflow": {
+      "name": "Purchase Order Approval",
+      "description": "Workflow for approving purchase orders",
+      "sla": 48
+    },
+    "stages": [
+      {
+        "name": "Initial Approval",
+        "description": "Review and approve purchase request",
+        "auto_progress": false,
+        "order_index": 1,
+        "sla": 24,
+        "tasks": [
+          {
+            "name": "Finance Review",
+            "description": "Finance team reviews the purchase request",
+            "auto_execute": false,
+            "order_index": 1,
+            "sla": 12,
+            "user_ids": [
+              101
+            ]
+          },
+          {
+            "name": "Manager Approval",
+            "description": "Manager approves the request",
+            "auto_execute": false,
+            "order_index": 2,
+            "sla": 12,
+            "user_ids": [
+              102
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Final Approval",
+        "description": "Authorize and process purchase order",
+        "auto_progress": false,
+        "order_index": 2,
+        "sla": 24,
+        "tasks": [
+          {
+            "name": "Procurement Approval",
+            "description": "Procurement team approves order",
+            "auto_execute": false,
+            "order_index": 1,
+            "sla": 12,
+            "user_ids": [
+              201
+            ]
+          },
+          {
+            "name": "CEO Approval",
+            "description": "Final approval from CEO",
+            "auto_execute": false,
+            "order_index": 2,
+            "sla": 12,
+            "user_ids": [
+              202
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
