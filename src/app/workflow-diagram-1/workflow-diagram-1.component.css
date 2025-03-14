@@ -1,0 +1,17 @@
+.stage rect {
+  fill: #ffcc00;
+  stroke: #ff9900;
+  stroke-width: 2px;
+}
+
+.task rect {
+  fill: #66ccff;
+  stroke: #3399ff;
+  stroke-width: 2px;
+}
+
+.edgePath path {
+  stroke: #666;
+  stroke-width: 2px;
+  fill: none;
+}

@@ -1,0 +1,102 @@
+<form class="wizard-container" [formGroup]="workflowForm">
+  @if (step===0) {
+  <div class="wizard-step" formGroupName="workflow">
+    <h3>Workflow Details</h3>
+    <label>Name:</label>
+    <input type="text" formControlName="name">
+    <label>Description:</label>
+    <textarea formControlName="description"></textarea>
+    <label>SLA Time(In Hours):</label>
+    <input type="number" formControlName="sla">
+  </div>
+  <div>
+    <button (click)="addStage()">+ Add Stage</button>
+    <div class="mini-stages-container">
+      @for (stage of stages.controls; track $index) {
+      <div class="mini-stage">
+        <h4>Stage {{ $index + 1 }}</h4>
+        <div class="mini-stage-action">
+          <button (click)="editOrAddStage($index)">Edit</button>
+          <button (click)="removeStage($index)">Delete</button>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+  @if(step===1){
+  <div class="wizard-step" formArrayName="stages">
+    <h3>Stages</h3>
+    <div [formGroupName]="currentIndex">
+      <h4>Stage {{ currentIndex + 1 }}</h4>
+      <input type="text" formControlName="name" placeholder="Stage Name">
+      <label>Description:</label>
+      <textarea formControlName="description"></textarea>
+      <div>
+        <label class="m-0">Auto Progress:</label>
+        <input class="w-auto" type="checkbox" formControlName="auto_progress">
+      </div>
+      <label>Order Index:</label>
+      <input formControlName="order_index" type="number" />
+      <label>Condition Expression:</label>
+      <input type="text" formControlName="condition_expression">
+      <label>SLA Time(In Hours):</label>
+      <input type="number" formControlName="sla">
+    </div>
+    <button (click)="addTask(currentIndex)">+ Add Task</button>
+    @if(getTasks(currentIndex).controls.length >0){
+    <div class="wizard-step">
+      <h3>Tasks</h3>
+      <div [formGroup]="getStageFormGroup(currentIndex)">
+        <div formArrayName="tasks">
+          <div *ngFor="let task of getTasks(currentIndex).controls; let j = index" [formGroupName]="j">
+            <h4>Stage {{ currentIndex + 1 }} Task {{j+1}}</h4>
+            <input type="text" formControlName="name" placeholder="Task Name">
+            <label>Description:</label>
+            <textarea formControlName="description"></textarea>
+            <label>Ai Model ID:</label>
+            <input type="number" formControlName="ai_model_id" />
+            <div>
+              <label class="m-0">Auto Execute:</label>
+              <input class="w-auto" type="checkbox" formControlName="auto_execute">
+            </div>
+            <label>Order Index:</label>
+            <input formControlName="order_index" type="number" />
+            <label>Condition Expression:</label>
+            <input type="text" formControlName="condition_expression">
+            <label>SLA Time(In Hours):</label>
+            <input type="number" formControlName="sla">
+            <label>Select Users:</label>
+            <ng-select [items]="userList" placeholder="Select Users" bindLabel="name" bindValue="id" [multiple]="true"
+              [formControl]="getUserIds(currentIndex, j)">
+            </ng-select>
+
+            <p style="color: white;">Selected User IDs: {{ getUserIds(currentIndex, j).value }}</p>
+            <button (click)="removeTask(currentIndex, j)">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  <div class="wizard-buttons">
+    <button (click)="prevStep()">Go Back</button>
+    <button>Save</button>
+  </div>
+  }
+</form>
+@if (wantToDelete) {
+<div class="dialog-overlay">
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <span class="delete-icon">✔</span>
+      <h2 class="dialog-heading">Delete</h2>
+    </div>
+    <p>Are you Sure want to delete ?</p>
+    <div class="btn-container">
+      <button class="no-btn" (click)="closeDeleteDialog()">No</button>
+      <button class="yes-btn" (click)="removeCurrentStage()">Yes</button>
+    </div>
+  </div>
+</div>
+}

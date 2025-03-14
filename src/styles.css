@@ -1,4 +1,5 @@
 @import "@ng-select/ng-select/themes/default.theme.css";
+
 /* @import "@ng-select/ng-select/themes/material.theme.css"; */
 /* Base Styling */
 body {
@@ -154,4 +155,93 @@ pre {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog-container {
+  width: 300px;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.success-icon {
+  font-size: 24px;
+  color: #28a745;
+}
+.delete-icon {
+  font-size: 24px;
+  color: #a72828;
+}
+
+h2 {
+  color: #28a745;
+  margin: 0;
+}
+.dialog-heading{
+  color: #a72828;
+}
+
+p {
+  font-size: 16px;
+  color: #333;
+}
+
+.close-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.close-btn:hover {
+  background: #218838;
+}
+
+.m-0 {
+  margin: 0;
+}
+
+.w-auto {
+  width: auto;
+}
+
+.mini-stage,.btn-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mini-stage-action{
+  display: flex;
+  gap: 10px;
+}
+
+.btn-container{
+  justify-content: flex-end;
+  gap: 20px;
+  align-items: baseline;
 }

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExampleComponent } from './example.component';
+import { WorkflowDiagramComponent } from './workflow-diagram.component';
 
-describe('ExampleComponent', () => {
-  let component: ExampleComponent;
-  let fixture: ComponentFixture<ExampleComponent>;
+describe('WorkflowDiagramComponent', () => {
+  let component: WorkflowDiagramComponent;
+  let fixture: ComponentFixture<WorkflowDiagramComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ExampleComponent]
+      imports: [WorkflowDiagramComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ExampleComponent);
+    fixture = TestBed.createComponent(WorkflowDiagramComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
