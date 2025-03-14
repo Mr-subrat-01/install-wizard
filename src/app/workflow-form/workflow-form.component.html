@@ -46,7 +46,7 @@
     <button (click)="addTask(currentIndex)">+ Add Task</button>
     @if(getTasks(currentIndex).controls.length >0){
     <div class="wizard-step">
-      <h3>Tasks</h3>
+      <h3>Tasks({{getTasks(currentIndex).controls.length}})</h3>
       <div [formGroup]="getStageFormGroup(currentIndex)">
         <div formArrayName="tasks">
           <div *ngFor="let task of getTasks(currentIndex).controls; let j = index" [formGroupName]="j">
