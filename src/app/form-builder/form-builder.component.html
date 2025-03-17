@@ -1,0 +1,76 @@
+<!-- Custom Modal -->
+<div class="modal-overlay" *ngIf="isOpen">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Create Form</h2>
+      <span class="close" (click)="closeModal.emit()">&times;</span>
+    </div>
+
+    <div class="modal-body">
+      <!-- Form Type Dropdown -->
+      <div class="form-group">
+        <label>Form Type</label>
+        <!-- <select [(ngModel)]="selectedType" (change)="onTypeChange()">
+          <option value="">Select One</option>
+          <option *ngFor="let type of formTypes" [value]="type">{{ type |titlecase }}</option>
+        </select> -->
+        <div class="btn-container" style="display: grid;grid-template-columns: repeat(3, 1fr);gap: 5px;">
+          @for (formType of formTypes; track $index) {
+          <button (click)="addField(formType)">+ {{ formType |titlecase }}</button>
+          }
+        </div>
+      </div>
+
+      <!-- Dynamic Form Fields -->
+      <div *ngFor="let field of formFields; let i = index" class="field-container">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="color: #1f2c34;">
+            Field {{i+1}}
+          </div>
+          <div (click)="removeField(i)" style="color: red; font-size: 20px;cursor: pointer;">&times;</div>
+        </div>
+        <div class="form-group">
+          <label>Form Label</label>
+          <input [(ngModel)]="field.label" placeholder="Enter label" />
+        </div>
+
+        <div class="form-group">
+          <label>Data Type</label>
+          <select [(ngModel)]="field.data_type">
+            <option value="">Select One</option>
+            <option *ngFor="let type of dataTypes" [value]="type.value">{{ type.label }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Is Required</label>
+          <select [(ngModel)]="field.is_required">
+            <option>Select One</option>
+            <option [value]="true">Required</option>
+            <option [value]="false">Optional</option>
+          </select>
+        </div>
+        <!-- File Extensions -->
+        <div class="form-group" *ngIf="field.type === 'file'">
+          <label>Allowed Extensions</label>
+          <ng-select [items]="allowed_extensions" placeholder="Select" [(ngModel)]="field.extensions" [multiple]="true">
+          </ng-select>
+        </div>
+
+        <!-- Options for Select, Radio, Checkbox -->
+        <div class="form-group" *ngIf="field.type === 'radio' || field.type === 'checkbox' || field.type === 'select'">
+          <label>Options</label>
+          <div class="option-group" *ngFor="let option of field.options; let j = index">
+            <input [(ngModel)]="field.options[j]" placeholder="Enter option" />
+            <button class="btn-delete" (click)="removeOption(field, j)">✖</button>
+          </div>
+          <button class="btn-add" (click)="addOption(field)">+ Add Option</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-save" (click)="generateJson()">Save Form</button>
+    </div>
+  </div>
+</div>

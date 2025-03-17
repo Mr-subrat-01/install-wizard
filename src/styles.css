@@ -167,6 +167,7 @@ pre {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999999;
 }
 
 .dialog-container {
@@ -244,4 +245,7 @@ p {
   justify-content: flex-end;
   gap: 20px;
   align-items: baseline;
+}
+input,select,textarea{
+  outline: none;
 }

@@ -72,7 +72,71 @@
             </ng-select>
 
             <p style="color: white;">Selected User IDs: {{ getUserIds(currentIndex, j).value }}</p>
-            <button (click)="removeTask(currentIndex, j)">Remove</button>
+            <div class="wizard-buttons" style="gap: 10px;">
+              <button (click)="removeTask(currentIndex, j)">Remove Task ({{j+1}})</button>
+              <button (click)="openFormModal()">Create Form</button>
+              <button (click)="openRuleDialog()">Create Rule</button>
+            </div>
+
+            @if(fields.length > 0){
+            <div class="form-container">
+              <h3>Form Fields</h3>
+              <div class="fields-wrapper">
+                <div class="field-box" *ngFor="let key of formJson | keyvalue">
+                  <span class="field-name">{{ key.value.label}}</span>
+                  <button class="edit-btn" (click)="openFormModal()">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            }
+
+            @if(rules.length >0){
+            <div>
+              <h3>Rules</h3>
+              <div class="fields-wrapper">
+                @for (rule of rules; track $index) {
+                <div>
+                  {{rule.name}}
+                </div>
+                }
+
+                <div>
+                  <button (click)="addCondition(currentIndex,j)">+ Add Condition</button>
+                  @if (getConditions(currentIndex,j).controls.length > 0) {
+                  <div class="conditions-wrapper">
+                    <div formArrayName="conditions">
+                      <div class="condition-row">
+                        <label>Column</label>
+                        <label>Operator</label>
+                        <label>Value</label>
+                        <label>Action</label>
+                      </div>
+                      <div *ngFor="let condition of getConditions(currentIndex,j).controls; let condIndex = index"
+                        [formGroupName]="condIndex" class="condition-row">
+                        <select formControlName="field" (change)="onFieldChange($event, currentIndex, j, condIndex)">
+                          <option value="">Select One</option>
+                          <option *ngFor="let field of getObjectKeys(formJson)" [value]="formJson[field].name">{{ formJson[field].label }}</option>
+                        </select>
+
+                        <select formControlName="operator">
+                          <option value="">Select One</option>
+                          <option *ngFor="let op of operators" [value]="op">{{ op }}</option>
+                        </select>
+
+                        <input style="width: auto;" [type]="condition.value.inputType" formControlName="value" placeholder="Enter value" />
+
+                        <button class="btn-remove" (click)="removeCondition(currentIndex,j,condIndex)"><i class="fa-solid fa-trash"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </div>
+
+              </div>
+            </div>
+            }
           </div>
         </div>
       </div>
@@ -96,6 +160,28 @@
     <div class="btn-container">
       <button class="no-btn" (click)="closeDeleteDialog()">No</button>
       <button class="yes-btn" (click)="removeCurrentStage()">Yes</button>
+    </div>
+  </div>
+</div>
+}
+<app-form-builder [isOpen]="isFormModalOpen" (closeModal)="closeFormModal()"
+  (formJsonGenerated)="onJsonGenerated($event)">
+</app-form-builder>
+@if(isRuleDialogOpen){
+<div class="dialog-overlay">
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <h2 class="">Add Rule</h2>
+    </div>
+    <div>
+      <input [(ngModel)]="ruleName" style="width: -webkit-fill-available; margin-bottom: 6px; color: white;" type="text"
+        placeholder="Enter Rule Name">
+      <textarea [(ngModel)]="ruleDescription" style="width: -webkit-fill-available; margin-bottom: 6px; color: white;"
+        placeholder="Enter Rule Description" cols="3"></textarea>
+    </div>
+    <div class="btn-container">
+      <button class="no-btn" (click)="closeRuleDialog()">Close</button>
+      <button class="yes-btn" (click)="addRule()">Save</button>
     </div>
   </div>
 </div>

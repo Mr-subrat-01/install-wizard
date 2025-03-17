@@ -1,0 +1,95 @@
+/* Container Styling */
+/* .form-container {
+  width: 320px;
+  background: #eef2f5;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+} */
+
+/* Fields Wrapper */
+.fields-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Each Field Box */
+.field-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease-in-out;
+}
+
+.field-box:hover {
+  background: #f7f7f7;
+  border-color: #bbb;
+}
+
+/* Field Name Styling */
+.field-name {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Edit Button */
+.edit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #007bff;
+  font-size: 18px;
+  padding: 4px;
+  transition: color 0.2s ease-in-out;
+}
+
+.edit-btn:hover {
+  color: #0056b3;
+  background-color: transparent;
+}
+
+
+.conditions-wrapper {
+  margin-top: 10px;
+}
+
+.condition-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 6px;
+  place-items: stretch;
+}
+
+.condition-row select,
+.condition-row input,
+.condition-row button {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.condition-row button {
+  max-width: 100px;
+}
+
+.condition-row select {
+  padding: 5px;
+  font-size: 14px;
+}
+
+.btn-remove {
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+}
