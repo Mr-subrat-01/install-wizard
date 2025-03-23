@@ -7,10 +7,19 @@
     <label>Description:</label>
     <textarea formControlName="description"></textarea>
     <label>SLA Time(In Hours):</label>
-    <input type="number" formControlName="sla">
+    <input type="text" formControlName="sla">
+    <div style="margin: 10px 0;">
+      @if (workflowId) {
+      <button (click)="updateWorkflow()">Update</button>
+      }@else{
+      <button (click)="saveWorkflow()">Save</button>
+      }
+    </div>
   </div>
   <div>
+    @if(workflowId){
     <button (click)="addStage()">+ Add Stage</button>
+    }
     <div class="mini-stages-container">
       @for (stage of stages.controls; track $index) {
       <div class="mini-stage">
@@ -38,12 +47,11 @@
       </div>
       <label>Order Index:</label>
       <input formControlName="order_index" type="number" />
-      <label>Condition Expression:</label>
-      <input type="text" formControlName="condition_expression">
+
       <label>SLA Time(In Hours):</label>
       <input type="number" formControlName="sla">
     </div>
-    <button (click)="addTask(currentIndex)">+ Add Task</button>
+    <button (click)="addTask(currentIndex)" style="margin: 10px 0;">+ Add Task</button>
     @if(getTasks(currentIndex).controls.length >0){
     <div class="wizard-step">
       <h3>Tasks({{getTasks(currentIndex).controls.length}})</h3>
@@ -62,8 +70,7 @@
             </div>
             <label>Order Index:</label>
             <input formControlName="order_index" type="number" />
-            <label>Condition Expression:</label>
-            <input type="text" formControlName="condition_expression">
+
             <label>SLA Time(In Hours):</label>
             <input type="number" formControlName="sla">
             <label>Select Users:</label>
@@ -74,36 +81,37 @@
             <p style="color: white;">Selected User IDs: {{ getUserIds(currentIndex, j).value }}</p>
             <div class="wizard-buttons" style="gap: 10px;">
               <button (click)="removeTask(currentIndex, j)">Remove Task ({{j+1}})</button>
-              <button (click)="openFormModal()">Create Form</button>
-              <button (click)="openRuleDialog()">Create Rule</button>
+              <button (click)="openFormModal(j)">Create Form</button>
+              @if(getObjectKeys(formJson.formFields).length > 0 && (!task.get('taskRule')?.value || task.get('taskRule')?.value.length === 0)){
+              <button (click)="openRuleDialog(j)">Create Rule</button>
+              }
             </div>
 
-            @if(fields.length > 0){
+            @if(task.get('form')?.value?.length > 0){
             <div class="form-container">
               <h3>Form Fields</h3>
               <div class="fields-wrapper">
-                <div class="field-box" *ngFor="let key of formJson | keyvalue">
-                  <span class="field-name">{{ key.value.label}}</span>
-                  <button class="edit-btn" (click)="openFormModal()">
+                <div class="field-box" *ngFor="let key of getObjectKeys(task.get('form')?.value[0])">
+                  <span class="field-name">{{ task.get('form')?.value[0][key].label }}</span>
+                  <button class="edit-btn" (click)="openFormModal(j)">
                     <i class="fa-solid fa-pen-to-square"></i>
                   </button>
                 </div>
               </div>
             </div>
+
             }
 
-            @if(rules.length >0){
+            @if(task.get('taskRule')?.value?.length > 0){
             <div>
               <h3>Rules</h3>
               <div class="fields-wrapper">
-                @for (rule of rules; track $index) {
+                @for (rule of task.get('taskRule')?.value; track $index) {
                 <div>
                   {{rule.name}}
                 </div>
-                }
-
                 <div>
-                  <button (click)="addCondition(currentIndex,j)">+ Add Condition</button>
+                  <button (click)="addCondition(currentIndex,j,rule.id)">+ Add Condition</button>
                   @if (getConditions(currentIndex,j).controls.length > 0) {
                   <div class="conditions-wrapper">
                     <div formArrayName="conditions">
@@ -115,9 +123,12 @@
                       </div>
                       <div *ngFor="let condition of getConditions(currentIndex,j).controls; let condIndex = index"
                         [formGroupName]="condIndex" class="condition-row">
+                        <input type="hidden" formControlName="rule_id">
                         <select formControlName="field" (change)="onFieldChange($event, currentIndex, j, condIndex)">
                           <option value="">Select One</option>
-                          <option *ngFor="let field of getObjectKeys(formJson)" [value]="formJson[field].name">{{ formJson[field].label }}</option>
+                          <option *ngFor="let field of getObjectKeys(formJson.formFields)"
+                            [value]="formJson.formFields[field].name">{{
+                            formJson.formFields[field].label }}</option>
                         </select>
 
                         <select formControlName="operator">
@@ -125,14 +136,34 @@
                           <option *ngFor="let op of operators" [value]="op">{{ op }}</option>
                         </select>
 
-                        <input style="width: auto;" [type]="condition.value.inputType" formControlName="value" placeholder="Enter value" />
+                        <input style="width: auto;" [type]="condition.value.inputType" formControlName="value"
+                          placeholder="Enter value" />
 
-                        <button class="btn-remove" (click)="removeCondition(currentIndex,j,condIndex)"><i class="fa-solid fa-trash"></i></button>
+                        <button class="btn-remove" (click)="removeCondition(currentIndex,j,condIndex)"><i
+                            class="fa-solid fa-trash"></i></button>
                       </div>
                     </div>
                   </div>
                   }
+                  @if(getConditions(currentIndex, j).controls.length > 1){
+                  <div style="display: flex;flex-direction: column;margin: 8px 0;">
+                    <label>Select Logical Operator</label>
+                    <select class="form-control" formControlName="logical_operator" style="padding: 9px;">
+                      <option value="">Select Operator</option> <!-- No default selection -->
+                      <option value="&&">✅ All conditions must be met</option>
+                      <option value="||">🔀 At least one condition must be met</option>
+                    </select>
+                    @if(task.get('logical_operator')?.invalid && task.get('logical_operator')?.touched){
+                    <div>
+                      <small style="color: red;">Logical Operator is required</small>
+                    </div>
+                    }
+                  </div>
+                  }
+
                 </div>
+                }
+
 
               </div>
             </div>
@@ -145,7 +176,7 @@
   </div>
   <div class="wizard-buttons">
     <button (click)="prevStep()">Go Back</button>
-    <button>Save</button>
+    <button (click)="saveStagesWithTasks()">Save</button>
   </div>
   }
 </form>
@@ -164,7 +195,7 @@
   </div>
 </div>
 }
-<app-form-builder [isOpen]="isFormModalOpen" (closeModal)="closeFormModal()"
+<app-form-builder [isOpen]="isFormModalOpen" [taskIndex]="formTaskIndex" (closeModal)="closeFormModal()"
   (formJsonGenerated)="onJsonGenerated($event)">
 </app-form-builder>
 @if(isRuleDialogOpen){
@@ -184,5 +215,25 @@
       <button class="yes-btn" (click)="addRule()">Save</button>
     </div>
   </div>
+</div>
+}
+@if (isOpen) {
+<div class="dialog-overlay">
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <span class="success-icon">✔</span>
+      <h2>Success</h2>
+    </div>
+    <p>{{ message }}</p>
+    <button class="close-btn" (click)="closeDialog()">OK</button>
+  </div>
+</div>
+
+}
+
+@if(isloading){
+<div class="loader-overlay" id="loader">
+  <div class="loader"></div>
+  <div>Please Wait...</div>
 </div>
 }

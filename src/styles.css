@@ -54,7 +54,7 @@ label {
 /* Inputs & Textarea */
 input,
 textarea {
-  width: 100%;
+  width: -webkit-fill-available;
   padding: 10px;
   border: 1px solid #333;
   border-radius: 6px;

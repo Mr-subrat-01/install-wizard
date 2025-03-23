@@ -27,7 +27,7 @@ export class FormBuilderComponent {
   @Input() isOpen: boolean = false; // Control modal from Parent
   @Output() closeModal = new EventEmitter<void>(); // Notify Parent to close
   @Output() formJsonGenerated = new EventEmitter<any>(); // Emit JSON
-
+  @Input() taskIndex: number | undefined;
   formFields: any[] = [];
   selectedType: string = '';
   formTypes = ['text', 'checkbox', 'radio', 'file', 'select', 'textarea'];
@@ -51,7 +51,7 @@ export class FormBuilderComponent {
       type: type,
       options: [],
       extensions: [],
-      data_type: "",
+      data_type: '',
     };
 
     if (type === 'file') {
@@ -74,10 +74,14 @@ export class FormBuilderComponent {
   }
 
   generateJson() {
-    this.generatedJson = {};
+    this.generatedJson = {
+      taskIndex: this.taskIndex,
+      formFields: {},
+    };
+
     this.formFields.forEach((field) => {
       const field_lower = field.label.toLowerCase().replace(/\s+/g, '_');
-      this.generatedJson[field_lower] = {
+      this.generatedJson.formFields[field_lower] = {
         name: field_lower,
         label: field.label,
         is_required: field.is_required ? 'required' : '',
@@ -89,8 +93,8 @@ export class FormBuilderComponent {
     });
 
     this.formJsonGenerated.emit(this.generatedJson);
-    // this.formFields = [];
   }
+
   removeField(index: number) {
     this.formFields.splice(index, 1);
   }
